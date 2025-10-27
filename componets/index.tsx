@@ -1,8 +1,14 @@
+'use client'
 import Link from 'next/link';
 import Footer from './footer';
+import { auth } from "./auth"
+import { useRouter } from 'next/navigation';
 
 
-export default function Landing(){
+export default async function Landing(){
+   const session = await auth();
+  
+
 return(
 <div>
  <div className="flex items-center justify-between px-8 py-4 bg-black text-white shadow-md">
@@ -15,7 +21,10 @@ return(
   <div className="flex space-x-8 text-lg font-medium">
     <Link href="" className="hover:text-blue-400 cursor-pointer transition-colors duration-200">Main</ Link>
     <Link href=""className="hover:text-blue-400 cursor-pointer transition-colors duration-200">About</ Link>
-    <Link href="/signup"className="hover:text-blue-400 cursor-pointer transition-colors duration-200">SignUp</ Link>
+    
+   
+    {session?  ` Hello! ${session.user?.name}` :   <Link href="/signup"className="hover:text-blue-400 cursor-pointer transition-colors duration-200"> SignUp</ Link>}
+    
   </div>
 </div>
 
@@ -37,7 +46,10 @@ return(
   </span>
 
  
-  <button className="mt-4 px-6 py-3 bg-blue-600 text-white font-bold rounded-2xl hover:bg-blue-700 transition-transform transform hover:scale-105 shadow-lg">
+  <button 
+  
+   className="mt-4 px-6 py-3 bg-blue-600 text-white font-bold rounded-2xl hover:bg-blue-700 transition-transform transform hover:scale-105 shadow-lg" 
+     >
     Create Quiz
   </button>
 </div>
