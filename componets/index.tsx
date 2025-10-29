@@ -1,13 +1,18 @@
-'use client'
+'use client';
 import Link from 'next/link';
 import Footer from './footer';
-import { auth } from "./auth"
+
 import { useRouter } from 'next/navigation';
 
 
-export default async function Landing(){
-   const session = await auth();
+export default function LandingClient({ session }: { session: any }){
   
+  const router = useRouter();
+
+
+    const handleClick = () => {
+    router.push('/dashboard');
+  };
 
 return(
 <div>
@@ -47,8 +52,8 @@ return(
 
  
   <button 
-  
-   className="mt-4 px-6 py-3 bg-blue-600 text-white font-bold rounded-2xl hover:bg-blue-700 transition-transform transform hover:scale-105 shadow-lg" 
+  onClick={handleClick}
+   className=" cursor-pointer mt-4 px-6 py-3 bg-blue-600 text-white font-bold rounded-2xl hover:bg-blue-700 transition-transform transform hover:scale-105 shadow-lg" 
      >
     Create Quiz
   </button>
