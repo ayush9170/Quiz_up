@@ -6,10 +6,49 @@
 
 generator client {
   provider = "prisma-client"
-  output   = "../app/generated/prisma"
+  
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String          @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  email     String          @unique
+  quizzes   Quiz[]          @relation("UserQuizzes")
+  responses UserResponse[]  @relation("UserResponses")
+  createdAt DateTime        @default(now())
+}
+
+model Quiz {
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  questions   Question[]
+  createdBy   User?            @relation("UserQuizzes", fields: [createdById], references: [id])
+  createdById String?          @db.ObjectId
+  responses   UserResponse[]   @relation("QuizResponses")
+  createdAt   DateTime         @default(now())
+}
+
+model Question {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  text      String
+  options   String[]
+  answer    String
+  quiz      Quiz?    @relation(fields: [quizId], references: [id])
+  quizId    String?  @db.ObjectId
+}
+
+model UserResponse {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  user        User     @relation("UserResponses", fields: [userId], references: [id])
+  userId      String   @db.ObjectId
+  quiz        Quiz     @relation("QuizResponses", fields: [quizId], references: [id])
+  quizId      String   @db.ObjectId
+  responses   Json
+  score       Int
+  createdAt   DateTime @default(now())
 }

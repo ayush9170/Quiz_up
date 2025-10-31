@@ -1,23 +1,36 @@
 'use client';
 
 import { useState } from 'react';
+import { useSession } from "next-auth/react"
 
 export default function CreateQuizPage() {
   const [title, setTitle] = useState('');
   const [subject, setSubject] = useState('');
   const [difficulty, setDifficulty] = useState('easy');
   const [numQuestions, setNumQuestions] = useState(5);
+ const [loading, setLoading] = useState(false);
+    const { data: session } = useSession()
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({
-      title,
-      subject,
-      difficulty,
-      numQuestions,
+    setLoading(true);
+
+    const res = await fetch("/api/ai", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title, difficulty,email: session?.user?.email ,subject,numQuestions }),
     });
-    alert('Quiz created successfully!');
+
+    const data = await res.json();
+    setLoading(false);
+
+    if (res.ok) {
+      alert(`Quiz created: ${data.title}`);
+    } else {
+      alert(`Error: ${data.error}`);
+    }
   };
+
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col items-center py-10 px-4">
@@ -107,7 +120,7 @@ export default function CreateQuizPage() {
           type="submit"
           className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-transform transform hover:scale-105 shadow-md"
         >
-          Create Quiz
+           {loading ? "Generating..." : "Generate Quiz"}
         </button>
       </form>
     </div>

@@ -4,6 +4,7 @@ import Link from "next/link";
 export default async function Dashboard() {
   const session = await auth();
   const userName = session?.user?.name || "User";
+  console.log(process.env.DATABASE_URL);
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col">
