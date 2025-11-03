@@ -1,21 +1,23 @@
 import { NextResponse } from "next/server";
 
 import ModelClient, { isUnexpected } from "@azure-rest/ai-inference";
-import { PrismaClient } from '@prisma/client'
+import prisma from "@/lib/prisma"
+
+
 import { AzureKeyCredential } from "@azure/core-auth";
 
 const token = process.env["GITHUB_TOKEN"];
 const endpoint = "https://models.github.ai/inference";
-const model = "openai/gpt-5";
-const prisma = new PrismaClient();
+const model = "gpt-4.1";
+
 
 // API route
 export async function POST(req: Request) {
   const { title, difficulty, userId,subject,numQuestions } = await req.json();
 
-  if (!title || !difficulty || !userId || !subject || !numQuestions) {
-    return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
-  }
+  // if (!title || !difficulty || !userId || !subject || !numQuestions) {
+  //   return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+  // }
 
   // ✅ Initialize AI client
   const client = ModelClient(endpoint, new AzureKeyCredential(token!));
@@ -25,7 +27,7 @@ export async function POST(req: Request) {
     body: {
       model,
       messages: [
-        { role: "system", content: "You are a helpful quiz generator AI." },
+        { role: "system",  content: "You are a helpful quiz generator AI. Always respond with valid JSON only — no explanations or text outside JSON."  },
         {
           role: "user",
           content: `Generate ${numQuestions} ${difficulty} level multiple-choice questions for a quiz titled "${title}" . 

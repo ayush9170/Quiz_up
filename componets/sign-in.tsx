@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 export default async function SignIn() {
   const session = await auth()
   if(session){
-alert('you are already loggedIn');
+
 redirect('/');
   } 
   console.log(session);

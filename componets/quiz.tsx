@@ -9,7 +9,8 @@ export default function CreateQuizPage() {
   const [difficulty, setDifficulty] = useState('easy');
   const [numQuestions, setNumQuestions] = useState(5);
  const [loading, setLoading] = useState(false);
-    const { data: session } = useSession()
+    const { data: session } = useSession();
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,7 +19,7 @@ export default function CreateQuizPage() {
     const res = await fetch("/api/ai", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, difficulty,email: session?.user?.email ,subject,numQuestions }),
+      body: JSON.stringify({ title, difficulty,userId:session?.user?.id ,subject,numQuestions }),
     });
 
     const data = await res.json();

@@ -9,9 +9,11 @@ export default function LandingClient({ session }: { session: any }){
   
   const router = useRouter();
 
-
     const handleClick = () => {
-    router.push('/dashboard');
+      if(session == null) { router.push('/signup');
+        alert('PLEASE LOGIN ')
+      }
+    else router.push('/dashboard');
   };
 
 return(
@@ -28,7 +30,9 @@ return(
     <Link href=""className="hover:text-blue-400 cursor-pointer transition-colors duration-200">About</ Link>
     
    
-    {session?  ` Hello! ${session.user?.name}` :   <Link href="/signup"className="hover:text-blue-400 cursor-pointer transition-colors duration-200"> SignUp</ Link>}
+    {session?    <Link href="/logout"className="hover:text-blue-400 cursor-pointer transition-colors duration-200">  Hello! {session.user?.name}</ Link> 
+       
+    :   <Link href="/signup"className="hover:text-blue-400 cursor-pointer transition-colors duration-200"> SignUp</ Link>}
     
   </div>
 </div>
