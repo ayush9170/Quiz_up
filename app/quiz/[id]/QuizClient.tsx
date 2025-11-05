@@ -1,10 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
+import { pusherClient } from "@/lib/pusher-client";
 
 export default function QuizClient({ id, questions }: { id: string; questions: any[] }) {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [score, setScore] = useState(0);
   const [attempts, setAttempts] = useState<any[]>([]);
+  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
 
   
   useEffect(() => {
@@ -13,16 +15,30 @@ export default function QuizClient({ id, questions }: { id: string; questions: a
       .then((data) => setAttempts(data || []));
   }, [id]);
 
-  const handleSelect = (questionId: string, option: string, correctAnswer: string) => {
-   
-    if (answers[questionId]) return;
+ const handleSelect = (questionId: string, option: string, correctAnswer: string) => {
+  if (answers[questionId]) return;
 
-    const isCorrect = option === correctAnswer;
-    setAnswers((prev) => ({ ...prev, [questionId]: option }));
+ 
+  const question = questions.find(q => q.id === questionId);
 
-   
-    setScore((prev) => prev + (isCorrect ? 1 : -1));
-  };
+  if (!question) return;
+
+  // Determine real correct option:
+  // If correctAnswer is a letter (a,b,c,d) → convert to index
+  let actualCorrectAnswer = correctAnswer;
+
+  if (/^[a-d]$/i.test(correctAnswer)) {  
+    const index = correctAnswer.toLowerCase().charCodeAt(0) - 'a'.charCodeAt(0);
+    actualCorrectAnswer = question.options[index];
+  }
+
+  // Check correctness
+  const isCorrect = option === actualCorrectAnswer;
+
+  setAnswers(prev => ({ ...prev, [questionId]: option }));
+  setScore(prev => prev + (isCorrect ? 1 : -1));
+};
+
 
   const handleSubmit = async () => {
     const res = await fetch(`/api/quiz/${id}/responses`, {
@@ -38,11 +54,28 @@ export default function QuizClient({ id, questions }: { id: string; questions: a
     }
   };
 
+useEffect(() => {
+  // Fetch initial leaderboard
+  fetch(`/api/quiz/${id}/leaderboard`)
+    .then((r) => r.json())
+    .then(setLeaderboard);
+
+  // Listen for real-time updates
+  const channel = pusherClient.subscribe(`quiz-${id}-leaderboard`);
+  channel.bind("update", () => {
+    fetch(`/api/quiz/${id}/leaderboard`)
+      .then((r) => r.json())
+      .then(setLeaderboard);
+  });
+
+  return () => pusherClient.unsubscribe(`quiz-${id}-leaderboard`);
+}, [id]);
+
   return (
     <div className="flex min-h-screen bg-black text-white p-10 gap-10">
       
       <div className="flex-1 space-y-6">
-        <h1 className="text-3xl font-bold mb-6">Real-Time Quiz</h1>
+        <h1 className="text-3xl font-bold mb-6">Quiz</h1>
         <h2 className="text-lg text-gray-400 mb-4">Score: {score}</h2>
 
         {questions.map((q, index) => (
@@ -55,9 +88,16 @@ export default function QuizClient({ id, questions }: { id: string; questions: a
             </h3>
             <ul className="space-y-2">
               {q.options.map((opt: string, i: number) => {
+
+                let correctoption;
+
+                 if (/^[a-d]$/i.test(q.answer)) {
+    const index = q.answer.toLowerCase().charCodeAt(0) - 'a'.charCodeAt(0);
+   correctoption= q.options[index];
+  }
                 const selected = answers[q.id] === opt;
-                const correct = selected && opt === q.answer;
-                const wrong = selected && opt !== q.answer;
+                const correct = selected && opt === correctoption ;
+                const wrong = selected && opt !== correctoption;
 
                 return (
                   <li
@@ -103,7 +143,34 @@ export default function QuizClient({ id, questions }: { id: string; questions: a
             ))}
           </ul>
         )}
+
+
+  
+  <h2 className="text-xl font-bold mb-4 text-center">Leaderboard</h2>
+
+  {leaderboard.length === 0 ? (
+    <p className="text-gray-400 text-center">No scores yet.</p>
+  ) : (
+    <ul className="space-y-3">
+      {leaderboard.map((entry, index) => (
+        <li key={index} className="bg-gray-800 p-3 rounded-md flex justify-between">
+          <span>{entry.user}</span>
+          <span className="font-bold text-green-400">{entry.score}</span>
+        </li>
+      ))}
+    </ul>
+  )}
+
+
       </div>
+
+
+
     </div>
   );
 }
+
+type LeaderboardEntry = {
+  user: string; 
+  score: number;
+};

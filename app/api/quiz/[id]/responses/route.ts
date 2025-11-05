@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { auth } from "@/componets/auth"; 
 import { ObjectId } from "bson";
+import { pusherServer } from "@/lib/pusher-server";
 
 
 export async function GET(req: Request, { params }: { params: { id: string } }) {
@@ -42,6 +43,8 @@ export async function POST(req: Request, { params }: { params: { id: string } })
       score,
     },
   });
+
+   await pusherServer.trigger(`quiz-${id}-leaderboard`, "update", {});
 
   return NextResponse.json(saved);
 }

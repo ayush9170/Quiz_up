@@ -19,10 +19,10 @@ export async function POST(req: Request) {
   //   return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   // }
 
-  // ✅ Initialize AI client
+
   const client = ModelClient(endpoint, new AzureKeyCredential(token!));
 
-  // ✅ Send request to GPT-5
+ 
   const aiResponse = await client.path("/chat/completions").post({
     body: {
       model,
