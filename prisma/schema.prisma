@@ -89,3 +89,38 @@ model UserResponse {
   score       Int
   createdAt   DateTime @default(now())
 }
+
+model Room {
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  code         String    @unique                // short join code
+  hostId       String?   @db.ObjectId
+  quizId       String    @db.ObjectId
+  state        String    @default("waiting")    // waiting | running | finished
+  currentIndex Int       @default(0)
+  timeLeft     Int?      // seconds remaining for current question
+  createdAt    DateTime  @default(now())
+  players      Player[]  @relation("RoomPlayers")
+}
+
+model Player {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  room      Room    @relation("RoomPlayers", fields: [roomId], references: [id])
+  roomId    String  @db.ObjectId
+  userId    String? @db.ObjectId   // if logged in
+  name      String
+  score     Int     @default(0)
+  connected Boolean @default(true)
+  createdAt DateTime @default(now())
+}
+
+
+model PlayerAnswer {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  roomCode   String
+  questionId String   @db.ObjectId
+  playerId   String   @db.ObjectId
+  selected   String
+
+  createdAt  DateTime @default(now())
+
+}
