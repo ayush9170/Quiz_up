@@ -6,6 +6,7 @@ export default async function Dashboard() {
   const session = await auth();
   const userName = session?.user?.name || "User";
 
+
     let quizzes: any[] = [];
 
 try{
@@ -37,12 +38,16 @@ try{
           </span>
         </div>
 
+
+
         <Link
           href="/quiz"
           className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-lg shadow inline-block transition-transform hover:scale-105"
         >
           + Create New Quiz
         </Link>
+
+       
       </header>
 
       {/* Main Content */}
@@ -63,18 +68,39 @@ try{
             ) : (
               <div className="grid md:grid-cols-3 gap-6">
                 {quizzes.map((quiz) => (
-                  <Link
-                    key={quiz.id}
-                    href={`/quiz/${quiz.id}`}
-                    className="bg-gray-800 rounded-xl p-5 hover:bg-gray-700 transition cursor-pointer"
-                  >
-                    <h4 className="font-bold text-lg text-white mb-2">{quiz.title}</h4>
-                    <p className="text-gray-400 text-sm">
-                      
-                         Created At: {new Date(quiz.createdAt).toLocaleDateString()}
-                        
-                    </p>
-                  </Link>
+                   <div
+      key={quiz.id}
+      className="relative bg-gray-800 rounded-xl p-5 hover:bg-gray-700 transition group"
+    >
+      <h4 className="font-bold text-lg text-white mb-2">
+        {quiz.title}
+      </h4>
+
+      <p className="text-gray-400 text-sm">
+        Created At: {new Date(quiz.createdAt).toLocaleDateString()}
+      </p>
+
+      {/* Hover menu */}
+      <div
+        className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center 
+                   gap-3 opacity-0 group-hover:opacity-100 transition z-20 rounded-xl"
+      >
+        <Link
+          href={`/quiz/${quiz.id}`}
+          className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        >
+          Open Quiz
+        </Link>
+
+        <Link
+          href={`/quiz/${quiz.id}/room`}
+          className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-green-600"
+        >
+         Create Multiplayer Room
+        </Link>
+      </div>
+    </div>
+
                 ))}
               </div>
             )}

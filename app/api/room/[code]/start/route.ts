@@ -4,7 +4,7 @@ import { pusherServer } from "@/lib/pusher-server";
 import { endQuestionAndUpdate } from "@/lib/quiz/endQuestionAndUpdate";
 
 export async function POST(req: Request, { params }: { params: { code: string }}) {
-  const { code } = params;
+  const { code } = await params;
   const body = await req.json(); // { startIndex?: number, duration?: number }
   const duration = body.duration ?? 15; // seconds per question
 

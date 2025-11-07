@@ -75,7 +75,8 @@ useEffect(() => {
     <div className="flex min-h-screen bg-black text-white p-10 gap-10">
       
       <div className="flex-1 space-y-6">
-        <h1 className="text-3xl font-bold mb-6">Quiz</h1>
+        <span className="text-3xl font-bold mb-6">Quiz</span>
+       
         <h2 className="text-lg text-gray-400 mb-4">Score: {score}</h2>
 
         {questions.map((q, index) => (

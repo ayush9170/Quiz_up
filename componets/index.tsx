@@ -2,11 +2,14 @@
 import Link from 'next/link';
 import Footer from './footer';
 
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 
 export default function LandingClient({ session }: { session: any }){
-  
+  const [code,setcode] =useState("");
+   const [loading, setLoading] = useState(false);
+
   const router = useRouter();
 
     const handleClick = () => {
@@ -15,6 +18,28 @@ export default function LandingClient({ session }: { session: any }){
       }
     else router.push('/dashboard');
   };
+
+    async function handleSubmit(e: React.FormEvent){
+      e.preventDefault();
+      setLoading(true);
+    const res = await fetch(`/room/${code}/join`,{
+        method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name:session?.user.name,userId:session?.user?.id }),
+     });
+
+     const data = res.json();
+     setLoading(false);
+
+     if(res.ok){
+      alert(`Joined successfully`);
+      redirect(`/room/${code}/PlayerClient`);
+     }
+     else {
+      alert(`Error: ${data.error}`);
+     }
+
+  }
 
 return(
 <div>
@@ -61,7 +86,40 @@ return(
      >
     Create Quiz
   </button>
+
+  <form 
+  className="w-full flex  mt-10 bg-black  items-center justify-center mt-10 px-6"
+  onSubmit={handleSubmit}
+>
+  <div className="flex items-center gap-3 bg-gray-900/60 backdrop-blur-md p-4 rounded-2xl shadow-lg border border-gray-700/40 max-w-xl w-full">
+    
+    <input
+      type="text"
+      name="Enter code to join quiz"
+      value={code}
+      onChange={(e) => setcode(e.target.value)}
+      placeholder="ENTER CODE TO JOIN QUIZ"
+      className="flex-1 px-4 py-2 rounded-xl bg-gray-800 text-white 
+                 placeholder-gray-400 tracking-wider text-lg
+                 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      required
+    />
+
+    <button
+      type="submit"
+      className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-xl 
+                 hover:bg-blue-700 transition-transform hover:scale-105 shadow-md"
+    >
+      {loading ? "Joining..." : "JOIN"}
+    </button>
+
+  </div>
+</form>
+
 </div>
+
+
+
 
 <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center px-8 py-16 space-y-12">
   {/* Main Heading */}
