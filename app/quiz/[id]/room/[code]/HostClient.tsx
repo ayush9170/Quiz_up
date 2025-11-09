@@ -28,7 +28,7 @@ export default function HostClient({ code, room }: { code: string; room: any }) 
   }, [code]);
 
   const start = async () => {
-    await fetch(`/api/room/${code}/start`, { method: "POST", body: JSON.stringify({ duration: 15 })});
+    await fetch(`/api/room/${code}/start`, { method: "POST", body: JSON.stringify({ duration: 180 })});
   };
 
   return (

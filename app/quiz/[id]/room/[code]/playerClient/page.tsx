@@ -1,10 +1,16 @@
 "use client";
 import { useEffect, useState } from "react";
 import { pusherClient } from "@/lib/pusher-client";
+import { useSession } from "next-auth/react";
+import { use } from "react";
 
-export default function PlayerClient({ code, player }: { code: string; player: any }) {
+export default function PlayerClient({ params }: { params: Promise<{ code: string }>}) {
   const [currentQ, setCurrentQ] = useState<any>(null);
   const [leaderboard, setLeaderboard] = useState<any[]>([]);
+  const{code}=  use(params);
+  const{data: session}= useSession();
+
+  
 
   useEffect(() => {
     const ch = pusherClient.subscribe(`room-${code}`);
@@ -19,14 +25,14 @@ export default function PlayerClient({ code, player }: { code: string; player: a
     await fetch(`/api/room/${code}/answer`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ playerId: player.id, questionId, selected })
+      body: JSON.stringify({ playerId: session?.user.id, questionId, selected })
     });
     // UI immediate feedback handled by host broadcasting question.ended with correct answer or by local compare if question.answer sent to clients
   };
 
   return (
     <div>
-      <h2>Player: {player.name}</h2>
+      <h2>Player:{session?.user.name}</h2>
       {currentQ ? (
         <div>
           <h3>{currentQ.text}</h3>

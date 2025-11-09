@@ -25,7 +25,7 @@ export default function QuizClient({ id, questions }: { id: string; questions: a
 
   // Determine real correct option:
   // If correctAnswer is a letter (a,b,c,d) → convert to index
-  let actualCorrectAnswer = correctAnswer;
+  let actualCorrectAnswer=correctAnswer;
 
   if (/^[a-d]$/i.test(correctAnswer)) {  
     const index = correctAnswer.toLowerCase().charCodeAt(0) - 'a'.charCodeAt(0);

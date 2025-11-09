@@ -20,22 +20,27 @@ export default function LandingClient({ session }: { session: any }){
   };
 
     async function handleSubmit(e: React.FormEvent){
+      if(!session) {
+        alert("first login");
+        return;
+      }
       e.preventDefault();
       setLoading(true);
-    const res = await fetch(`/room/${code}/join`,{
+    const res = await fetch(`http://localhost:3000/api/room/${code}/join`,{
         method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name:session?.user.name,userId:session?.user?.id }),
+      body: JSON.stringify({ name:session.user.name,userId:session.user.id }),
      });
 
-     const data = res.json();
+     const data =await res.json();
      setLoading(false);
 
      if(res.ok){
       alert(`Joined successfully`);
-      redirect(`/room/${code}/PlayerClient`);
+      router.push(`/quiz/${data.room.quizId}/room/${code}/playerClient`);
      }
      else {
+      console.log(data);
       alert(`Error: ${data.error}`);
      }
 

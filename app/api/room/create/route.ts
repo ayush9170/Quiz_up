@@ -14,12 +14,12 @@ export async function POST(req: Request) {
   });
 
   // create host player record
-  const player = await prisma.player.create({
-    data: { roomId: room.id, userId: hostId, name: hostName, score: 0 },
-  });
+  // const player = await prisma.player.create({
+  //   data: { roomId: room.id, userId: hostId,code:code, name: hostName, score: 0 },
+  // });
 
   // notify channel (optional)
-  await pusherServer.trigger(`room-${code}`, "player.joined", { player });
+  // await pusherServer.trigger(`room-${code}`, "player.joined", { player });
 
-  return NextResponse.json({ room, player });
+  return NextResponse.json({ room});
 }

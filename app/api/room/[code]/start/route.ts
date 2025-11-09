@@ -32,10 +32,10 @@ export async function POST(req: Request, { params }: { params: { code: string }}
   });
 
   // Optionally set a server-side timer to fire question.ended after duration
-  setTimeout(async () => {
-    // compute answers, update scores, broadcast question.ended and score.updated
-    await endQuestionAndUpdate(code, index);
-  }, duration * 1000);
+  // setTimeout(async () => {
+  //   // compute answers, update scores, broadcast question.ended and score.updated
+  //   await endQuestionAndUpdate(code, index);
+  // }, duration * 1000);
 
   return NextResponse.json({ ok: true });
 }
