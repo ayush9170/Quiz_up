@@ -106,7 +106,7 @@ model Player {
   id        String  @id @default(auto()) @map("_id") @db.ObjectId
   room      Room    @relation("RoomPlayers", fields: [roomId], references: [id])
   roomId    String  @db.ObjectId
-  userId    String? @db.ObjectId 
+  userId    String @db.ObjectId  @unique
   code       String // if logged in
   name      String
   score     Int     @default(0)

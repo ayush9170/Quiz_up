@@ -23,6 +23,8 @@ roomCode: code, questionId,playerId, selected },
     where: { code: code },
   });
 
+ 
+
   // Get all answers for this question
   const answers = await prisma.playerAnswer.findMany({
     where: { roomCode: code, questionId },
@@ -59,11 +61,13 @@ roomCode: code, questionId,playerId, selected },
   // Award +10 for correct answers (example)
   for (const a of answers) {
     if (a.selected === actualCorrectAnswer) {
-      await prisma.player.update({
-        where: { id: a.playerId },
+      const res = await prisma.player.update({
+        where: { userId: a.playerId },
         data: { score: { increment: 10 } },
       });
+      console.log(res);
     }
+    
   }
 
   // Fetch updated leaderboard

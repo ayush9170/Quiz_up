@@ -15,5 +15,5 @@ export async function GET(req: Request,
         }
       })
 
-      return NextResponse.json(room);
+      return NextResponse.json({room});
 }

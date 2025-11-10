@@ -90,7 +90,7 @@ useEffect(() => {
             <ul className="space-y-2">
               {q.options.map((opt: string, i: number) => {
 
-                let correctoption;
+                let correctoption=q.answer;
 
                  if (/^[a-d]$/i.test(q.answer)) {
     const index = q.answer.toLowerCase().charCodeAt(0) - 'a'.charCodeAt(0);

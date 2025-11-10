@@ -7,7 +7,7 @@ export default async function Room({
 }: {
   params: { id: string };
 }) {
-  const { id } =  await params;
+  const { id } =   params;
   const session = await auth();
 
   const res = await fetch("http://localhost:3000/api/room/create", {
