@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { pusherClient } from "@/lib/pusher-client";
 
-export default function HostClient({ code, room }: { code: string; room: any }) {
+export default function HostClient({ code}: { code: string}) {
   const [players, setPlayers] = useState<any[]>([]);
   const [leaderboard, setLeaderboard] = useState<any[]>([]);
   const [currentQ, setCurrentQ] = useState<any | null>(null);
