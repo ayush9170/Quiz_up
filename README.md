@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🧠 Real-Time Multiplayer AI Quiz Platform
 
 A web application where users can **log in with Google**, generate quizzes using **GPT-4**, and play them in **real-time multiplayer rooms** with friends.  
@@ -59,3 +60,6 @@ NEXTAUTH_URL="http://localhost:3000"
 ---
 # Install dependencies
 npm install
+=======
+
+>>>>>>> d85b339db6f921b124a1a4d72d888439f846ee57
