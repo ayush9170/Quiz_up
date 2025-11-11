@@ -37,7 +37,7 @@ Built for fast, interactive quiz battles with live updates powered by **Pusher**
 git clone https://github.com/your-username/ai-quiz-app.git
 
 cd ai-quiz-app
-
+---
 # 2.Set environment variables in .env:
 
 DATABASE_URL="your_mongodb_connection_string"
@@ -51,13 +51,11 @@ OPENAI_API_KEY="your_gpt4_api_key"
 NEXTAUTH_SECRET="your_random_secret"
 NEXTAUTH_URL="http://localhost:3000"
 
+---
+
 # Run the App
  npm run dev
 
-
-
-
-
-
+---
 # Install dependencies
 npm install
