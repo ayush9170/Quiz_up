@@ -16,10 +16,10 @@ A web app that lets users log in with Google, generate quizzes using GPT-4, and 
 
 6. Database layer managed with Prisma + MongoDB
 
-🛠️ Tech Stack
-Frontend:	Next.js, Tailwind CSS
-Backend:	Node.js, Next.js API Routes
-Auth:	Google OAuth (NextAuth or custom)
-Database:	MongoDB + Prisma ORM
-Real-Time Updates:	Pusher
+🛠️ Tech Stack <br>
+Frontend:	Next.js, Tailwind CSS <br>
+Backend:	Node.js, Next.js API Routes <br>
+Auth:	Google OAuth (NextAuth or custom) <br>
+Database:	MongoDB + Prisma ORM <br>
+Real-Time Updates:	Pusher <br>
 AI:	GPT-4 API
